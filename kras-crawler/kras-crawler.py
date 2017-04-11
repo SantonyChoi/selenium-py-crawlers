@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
-import collections, logging, time
+import collections, logging, time, sys
 
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 
@@ -89,6 +88,7 @@ def crawl(start, end):
     input_file = open('./input/input.txt', 'r')
     output_basic_file = open('./output_basic_'+str(start)+'_to_'+str(end)+'.txt', 'w')
     output_advanced_file = open('./output_advanced_'+str(start)+'_to_'+str(end)+'.txt', 'w')
+    output_error_file = open('./output_error_'+str(start)+'_to_'+str(end)+'.txt', 'w')
 
     print 'start get'
     driver.get(kras_url)
@@ -103,10 +103,11 @@ def crawl(start, end):
             #save_result_advanced(driver, output_advanced_file, inputs)
 
         except Exception,e:
-            driver.save_screenshot('screenshot.png')
+            driver.save_screenshot('screenshot' + str(i) + '.png')
+            output_error_file.write('failed: raw ' + str(i) + '\n')
             print 'see the screenshot'
             print driver.current_url
             print e
 
 
-crawl(1,10)
+crawl(int(sys.argv[1]), int(sys.argv[2]))
