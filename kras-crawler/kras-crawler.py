@@ -20,6 +20,13 @@ def read_input(file_d):
 
 def search_target(driver, inputs):
     logging.debug('search_target')
+
+    select_sido = Select(driver.find_element_by_id('sidonm'))
+    select_sido.select_by_visible_text(inputs.sido)
+
+    select_gu = Select(driver.find_element_by_xpath('//*[@id="sggnm"]'))
+    select_gu.select_by_visible_text(inputs.gu)
+
     bonnum = driver.find_element_by_name('textfield')
     bonnum.clear()
     bonnum.send_keys(inputs.bonnum)
@@ -28,11 +35,6 @@ def search_target(driver, inputs):
     bunum.clear()
     bunum.send_keys(inputs.bunum)
 
-    select_sido = Select(driver.find_element_by_id('sidonm'))
-    select_sido.select_by_visible_text(inputs.sido)
-
-    select_gu = Select(driver.find_element_by_xpath('//*[@id="sggnm"]'))
-    select_gu.select_by_visible_text(inputs.gu)
     time.sleep(1)
 
     select_dong = Select(driver.find_element_by_id('umdnm'))
@@ -46,7 +48,7 @@ def save_result_basic(driver, output_basic_file, inputs):
     logging.debug('save_result_basic')
 
     # 시,구,동,본번,부번,지목,면적,개별공시지가,건물명칭,주용도,대지면적,연면적,건축물수,건축면적,건폐율,용적율,특이사항
-    result_string = '\n' + inputs.sido + ',' + inputs.gu + ',' + inputs.dong + ',' + inputs.bonnum + ',' + inputs.bunum + ','
+    result_string = inputs.sido + ',' + inputs.gu + ',' + inputs.dong + ',' + inputs.bonnum + ',' + inputs.bunum + ','
 
     result_string += driver.find_element_by_xpath("//*[@id=\"baseInfo_print\"]/table[1]/tbody/tr[1]/td[1]").text.encode('utf-8') + ','
     result_string += driver.find_element_by_xpath("//*[@id=\"baseInfo_print\"]/table[1]/tbody/tr[1]/td[2]").text.encode('utf-8') + ','
@@ -68,16 +70,20 @@ def save_result_basic(driver, output_basic_file, inputs):
 def save_result_advanced(driver, output_advanced_file, inputs):
     logging.debug('save_result_advanced')
     # 시,구,동,본번,부번,가격기준년도,토지소재지,지번,개별공시지가,기준일자,공시일자,가격기준년도,토지소재지, ...
-    table_element = driver.find_elements_by_xpath("//table[@id=\"landPrice_print\"]/tbody/tr")
+    table_element = driver.find_elements_by_xpath("//*[@id='landPrice_print']/table/tbody/tr")
     row_count = len(table_element)
-    print('lenth of table is '+str(row_count))
+    print('length of the table is '+str(row_count))
 
     result_string = inputs.sido + ',' + inputs.gu + ',' + inputs.dong + ',' + inputs.bonnum + ',' + inputs.bunum + ','
 
     for row in range(1, row_count + 1):
         for col in range(1, 7):
-            result_string += driver.find_elements_by_xpath("//*[@id=\"landPrice_print\"]/table/tbody/tr[" + str(row) + "]/td[" + str(col) + "1]").text.encode('utf-8')
-        result_string += '\n'
+            this_xpath = "//*[@id=\"landPrice_print\"]/table/tbody/tr[" + str(row) + "]/td[" + str(col) + "]"
+            this_entry = driver.find_element_by_xpath(this_xpath).text.encode('utf-8').strip() + ','
+
+            result_string += this_entry
+
+    result_string += '\n'
 
     print result_string
     output_advanced_file.write(unicode(result_string, 'utf-8').encode('euc-kr'))
@@ -94,13 +100,15 @@ def crawl(start, end):
     driver.get(kras_url)
     print 'finished get'
 
-    for i in range(start, end + 1):
+    for i in range(1, end + 1):
         try:
             inputs = read_input(input_file)
+            if i < start:
+                continue
 
             search_target(driver, inputs)
             save_result_basic(driver, output_basic_file, inputs)
-            #save_result_advanced(driver, output_advanced_file, inputs)
+            save_result_advanced(driver, output_advanced_file, inputs)
 
         except Exception,e:
             driver.save_screenshot('screenshot' + str(i) + '.png')
