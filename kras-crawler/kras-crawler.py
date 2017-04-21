@@ -70,9 +70,11 @@ def save_result_basic(driver, output_basic_file, inputs):
 def save_result_advanced(driver, output_advanced_file, inputs):
     logging.debug('save_result_advanced')
     # 시,구,동,본번,부번,가격기준년도,토지소재지,지번,개별공시지가,기준일자,공시일자,가격기준년도,토지소재지, ...
+    tabclick = driver.find_element_by_xpath('//*[@id="tab0301"]/li[5]/a')
+    tabclick.click()
+
     table_element = driver.find_elements_by_xpath("//*[@id='landPrice_print']/table/tbody/tr")
     row_count = len(table_element)
-    print('length of the table is '+str(row_count))
 
     result_string = inputs.sido + ',' + inputs.gu + ',' + inputs.dong + ',' + inputs.bonnum + ',' + inputs.bunum + ','
 
@@ -80,7 +82,6 @@ def save_result_advanced(driver, output_advanced_file, inputs):
         for col in range(1, 7):
             this_xpath = "//*[@id=\"landPrice_print\"]/table/tbody/tr[" + str(row) + "]/td[" + str(col) + "]"
             this_entry = driver.find_element_by_xpath(this_xpath).text.encode('utf-8').strip() + ','
-
             result_string += this_entry
 
     result_string += '\n'
