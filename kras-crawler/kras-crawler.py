@@ -48,6 +48,9 @@ def save_result_basic(driver, output_basic_file, inputs):
     logging.debug('save_result_basic')
 
     # 시,구,동,본번,부번,지목,면적,개별공시지가,건물명칭,주용도,대지면적,연면적,건축물수,건축면적,건폐율,용적율,특이사항
+    tabclick = driver.find_element_by_xpath('//*[@id="tab0301"]/li[1]/a')
+    tabclick.click()
+
     result_string = inputs.sido + ',' + inputs.gu + ',' + inputs.dong + ',' + inputs.bonnum + ',' + inputs.bunum + ','
 
     result_string += driver.find_element_by_xpath("//*[@id=\"baseInfo_print\"]/table[1]/tbody/tr[1]/td[1]").text.encode('utf-8') + ','
