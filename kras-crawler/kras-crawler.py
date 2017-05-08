@@ -35,7 +35,7 @@ def search_target(driver, inputs):
     bunum.clear()
     bunum.send_keys(inputs.bunum)
 
-    time.sleep(1)
+    time.sleep(0.1)
 
     select_dong = Select(driver.find_element_by_id('umdnm'))
     select_dong.select_by_visible_text(inputs.dong)
