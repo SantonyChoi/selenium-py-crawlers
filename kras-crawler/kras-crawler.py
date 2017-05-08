@@ -66,7 +66,7 @@ def save_result_basic(driver, output_basic_file, inputs):
     result_string += driver.find_element_by_xpath("//*[@id=\"baseInfo_print\"]/table[1]/tbody/tr[5]/td[3]").text.encode('utf-8') + ','
     result_string += driver.find_element_by_xpath("//*[@id=\"baseInfo_print\"]/table[1]/tbody/tr[6]/td").text.encode('utf-8') + '\n'
 
-    print result_string
+    #print result_string
     output_basic_file.write(unicode(result_string, 'utf-8').encode('euc-kr'))
 
 
@@ -89,11 +89,11 @@ def save_result_advanced(driver, output_advanced_file, inputs):
 
     result_string += '\n'
 
-    print result_string
+    #print result_string
     output_advanced_file.write(unicode(result_string, 'utf-8').encode('euc-kr'))
 
 def crawl(start, end):
-    driver = webdriver.PhantomJS(executable_path='/Users/Santony/workspace/phantomjs-2.1.1-macosx/bin/phantomjs')
+    driver = webdriver.PhantomJS(executable_path='../../phantomjs')
     logging.basicConfig(filename='example.log',level=logging.DEBUG)
     input_file = open('./input/input.txt', 'r')
     output_basic_file = open('./output_basic_'+str(start)+'_to_'+str(end)+'.txt', 'w')
@@ -106,6 +106,7 @@ def crawl(start, end):
 
     for i in range(1, end + 1):
         try:
+            print 'i: ' + str(i)
             inputs = read_input(input_file)
             if i < start:
                 continue
