@@ -106,11 +106,11 @@ def crawl(start, end):
 
     for i in range(1, end + 1):
         try:
-            print 'i: ' + str(i)
             inputs = read_input(input_file)
             if i < start:
                 continue
 
+            print 'i: ' + str(i)
             search_target(driver, inputs)
             save_result_basic(driver, output_basic_file, inputs)
             save_result_advanced(driver, output_advanced_file, inputs)
