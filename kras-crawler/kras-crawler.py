@@ -121,6 +121,9 @@ def crawl(start, end):
             print 'see the screenshot'
             print driver.current_url
             print e
+            print 'restart get'
+            driver.get(kras_url)
+            print 'finished get'
 
 
 crawl(int(sys.argv[1]), int(sys.argv[2]))
